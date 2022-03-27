@@ -12,12 +12,12 @@ const config = {
   FALL_DEATH: 600,
 };
 
-loadSprite('player', 'assets/Player.png');
-loadSprite('player-left', 'assets/Player-Left.png');
-loadSprite('player-right', 'assets/Player-Right.png');
-loadSprite('player-top', 'assets/Player-Top.png');
-loadSprite('tile-1', 'assets/Tile-1.png');
-loadSprite('tile-2', 'assets/Tile-2.png');
+loadSprite('player', 'https://i.imgur.com/DmDMCq3.png');
+loadSprite('player-left', 'https://i.imgur.com/AkrVTlq.png');
+loadSprite('player-right', 'https://i.imgur.com/UXHhfu3.png');
+loadSprite('player-top', 'https://i.imgur.com/0ntlkPK.png');
+loadSprite('tile-1', 'https://i.imgur.com/enEYzsi.png');
+loadSprite('tile-2', 'https://i.imgur.com/CNt2b6t.png');
 
 scene('game', (levelNumber = 0) => {
   const gameLevels = [
@@ -91,7 +91,7 @@ scene('game', (levelNumber = 0) => {
   player.onCollide('food', (f) => {
     destroy(f);
     add([text('You win!'), pos(center()), color(0, 0, 0)]);
-    let nextLevel: number = levelNumber + 1;
+    let nextLevel = levelNumber + 1;
     go('game', nextLevel);
   });
 });
