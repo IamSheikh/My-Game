@@ -29,8 +29,19 @@ scene("game", (levelNumber = 0) => {
       "                         ",
       "                         ",
       "                         ",
-      "                   $%    ",
+      "                   $     ",
       "=-=-=-=-=-=-=-=   -=-    ",
+    ],
+    [
+      "                         ",
+      "                                      -=-=-",
+      "                         ",
+      "                                 =-=-=",
+      "                         ",
+      "                            -=-=-",
+      "                      =-=-=   ",
+      "                                                        $",
+      "=-=-=-=-=-=-=  -=-=-=-                   =-=-=-=-=- =-=-=-=-=",
     ],
     [
       "                         ",
@@ -40,8 +51,8 @@ scene("game", (levelNumber = 0) => {
       "                         ",
       "                         ",
       "                         ",
-      "                         ",
-      "=-=-=-=-=-=-=  -=-=-=-   ",
+      "                   %     ",
+      "=-=-=-=-=-=-=-=   -=-    ",
     ],
   ];
 
@@ -56,6 +67,7 @@ scene("game", (levelNumber = 0) => {
     "-": () => [sprite("tile-2"), area(), solid(), pos(0, 0), scale(1.0)],
     "(": () => [sprite("player"), area(), body(), pos(0, 0), scale(1.2)],
     $: () => [rect(30, 30), area(), body(), color(0, 0, 0), "food"],
+    "%": () => [rect(30, 30), area(), body(), color(0, 0, 0), "win"],
   });
 
   const player = add([sprite("player"), pos(5, 5), area(), body()]);
@@ -94,9 +106,18 @@ scene("game", (levelNumber = 0) => {
     let nextLevel = levelNumber + 1;
     go("game", nextLevel);
   });
+
+  player.onCollide("win", (w) => {
+    destroy(w);
+    go("win");
+  });
 });
 
 go("game");
+
+scene("win", () => {
+  add([text("You Win!"), pos(center()), origin("center")]);
+});
 
 scene("lose", () => {
   add([text("You lose"), pos(center()), origin("center")]);
