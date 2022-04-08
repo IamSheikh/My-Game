@@ -12,12 +12,15 @@ const config = {
   FALL_DEATH: 600,
 };
 
+let isJumping = false;
+
 loadSprite("player", "https://i.imgur.com/DmDMCq3.png");
 loadSprite("player-left", "https://i.imgur.com/AkrVTlq.png");
 loadSprite("player-right", "https://i.imgur.com/UXHhfu3.png");
 loadSprite("player-top", "https://i.imgur.com/0ntlkPK.png");
 loadSprite("tile-1", "https://i.imgur.com/enEYzsi.png");
 loadSprite("tile-2", "https://i.imgur.com/CNt2b6t.png");
+loadSprite("bad-guy", "https://i.imgur.com/BMLAEuz.png");
 
 scene("game", (levelNumber = 0) => {
   const gameLevels = [
@@ -29,7 +32,7 @@ scene("game", (levelNumber = 0) => {
       "                         ",
       "                         ",
       "                         ",
-      "                   $     ",
+      "          ~   ~    $     ",
       "=-=-=-=-=-=-=-=   -=-    ",
     ],
     [
@@ -68,14 +71,23 @@ scene("game", (levelNumber = 0) => {
     "(": () => [sprite("player"), area(), body(), pos(0, 0), scale(1.2)],
     $: () => [rect(30, 30), area(), body(), color(0, 0, 0), "food"],
     "%": () => [rect(30, 30), area(), body(), color(0, 0, 0), "win"],
+    "~": () => [
+      sprite("bad-guy"),
+      area(),
+      body(),
+      move(LEFT, 100),
+      scale(0.7),
+      "bad-guy",
+    ],
   });
 
   const player = add([sprite("player"), pos(5, 5), area(), body()]);
 
-  onKeyPress("s", () => {
+  onKeyDown("s", () => {
     if (player.isGrounded()) {
       player.jump(config.JUMP_FORCE);
       player.use(sprite("player-top"));
+      isJumping = true;
       // player.use(sprite('player'));
       setTimeout(() => {
         player.use(sprite("player"));
@@ -100,11 +112,25 @@ scene("game", (levelNumber = 0) => {
     }
   });
 
+  player.onCollide("bad-guy", (b) => {
+    if (isJumping) {
+      destroy(b);
+    } else {
+      go("lose");
+    }
+  });
+
   player.onCollide("food", (f) => {
     destroy(f);
     add([text("You win!"), pos(center()), color(0, 0, 0)]);
     let nextLevel = levelNumber + 1;
     go("game", nextLevel);
+  });
+
+  player.onUpdate(() => {
+    if (player.isGrounded()) {
+      isJumping = false;
+    }
   });
 
   player.onCollide("win", (w) => {
@@ -115,10 +141,9 @@ scene("game", (levelNumber = 0) => {
 
 go("game");
 
-scene("win", () => {
-  add([text("You Win!"), pos(center()), origin("center")]);
-});
-
 scene("lose", () => {
   add([text("You lose"), pos(center()), origin("center")]);
+});
+scene("win", () => {
+  add([text("You Win!"), pos(center()), origin("center")]);
 });
