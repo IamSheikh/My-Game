@@ -105,6 +105,28 @@ scene("game", (levelNumber = 0) => {
     player.move(-config.MOVE_SPEED, 0);
   });
 
+  onKeyPress("up", () => {
+    if (player.isGrounded()) {
+      player.jump(config.JUMP_FORCE);
+      player.use(sprite("player-top"));
+      isJumping = true;
+      // player.use(sprite('player'));
+      setTimeout(() => {
+        player.use(sprite("player"));
+      }, 700);
+    }
+  });
+
+  onKeyDown("right", () => {
+    player.use(sprite("player-right"));
+    player.move(config.MOVE_SPEED, 0);
+  });
+
+  onKeyDown("left", () => {
+    player.use(sprite("player-left"));
+    player.move(-config.MOVE_SPEED, 0);
+  });
+
   player.onUpdate(() => {
     camPos(player.pos);
     if (player.pos.y >= config.FALL_DEATH) {
